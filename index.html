@@ -266,6 +266,10 @@
           <span id="sound-icon" class="text-base sm:text-lg">🔊</span>
         </button>
 
+        <button id="btn-leaderboard" onclick="toggleLeaderboardModal()" class="px-2.5 py-1.5 rounded-full bg-sky-400 hover:bg-sky-300 text-slate-950 font-bold text-xs sm:text-sm transition active:scale-95 shadow">
+          🏆 สถิติ
+        </button>
+
         <button id="btn-guide" onclick="toggleGuideModal()" class="px-2.5 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-emerald-950 font-bold text-xs sm:text-sm transition active:scale-95 shadow">
           📋 คู่มือ
         </button>
@@ -626,6 +630,9 @@
         <button onclick="startGame()" class="game-btn w-full py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-extrabold text-lg sm:text-xl tracking-wide cursor-pointer">
           🚀 เริ่มทดลองเลย!
         </button>
+        <button onclick="toggleLeaderboardModal()" class="mt-2.5 w-full py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs sm:text-sm border border-amber-300 transition cursor-pointer">
+          🏆 ดูทำเนียบผู้พิชิตไนโตรเจน (Top 5)
+        </button>
       </div>
     </div>
 
@@ -654,50 +661,86 @@
     <!-- ========================================== -->
     <!-- หน้าจอซ้อนทับ 3: ชนะการทดลอง (Victory) -->
     <!-- ========================================== -->
-    <div id="screen-victory" class="hidden absolute inset-0 z-40 bg-emerald-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center shadow-2xl border-4 border-emerald-400 pop-in relative overflow-hidden">
-        <div class="text-5xl sm:text-6xl mb-2">🎉🧪✨</div>
+    <div id="screen-victory" class="hidden absolute inset-0 z-40 bg-emerald-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 text-center shadow-2xl border-4 border-emerald-400 pop-in relative overflow-hidden my-auto">
+        <div class="text-4xl sm:text-5xl mb-1">🎉🧪✨</div>
         
-        <!-- ขวดสารละลายสีเขียวเรืองแสง -->
-        <div class="my-3 flex justify-center">
-          <div class="w-24 h-24 rounded-full bg-emerald-100 border-4 border-emerald-400 flex items-center justify-center shadow-inner glow-success">
-            <svg viewBox="0 0 100 100" class="w-16 h-16">
-              <path d="M38,20 L62,20 L82,82 Q85,92 74,92 L26,92 Q15,92 18,82 Z" fill="#dcfce7" stroke="#15803d" stroke-width="4" />
-              <path d="M27,55 L73,55 L80,82 Q82,90 73,90 L27,90 Q18,90 20,82 Z" fill="#22c55e" />
-              <circle cx="42" cy="70" r="4" fill="#bbf7d0" />
-              <circle cx="58" cy="78" r="3" fill="#bbf7d0" />
-              <circle cx="50" cy="63" r="2.5" fill="#bbf7d0" />
-            </svg>
-          </div>
-        </div>
-
-        <div class="inline-block bg-emerald-600 text-white font-extrabold px-5 py-2.5 rounded-2xl text-xl sm:text-2xl shadow-lg mb-3">
+        <div class="inline-block bg-emerald-600 text-white font-extrabold px-4 py-2 rounded-2xl text-lg sm:text-xl shadow-md mb-2.5">
           "ทดสอบสำเร็จ ไนโตรเจนสูงมาก"
         </div>
 
         <!-- สรุปเวลาที่ใช้และสถิติสูงสุด -->
-        <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3 mb-4 flex flex-col sm:flex-row items-center justify-around gap-2">
+        <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-2.5 mb-3 flex items-center justify-around gap-2">
           <div>
-            <div class="text-xs font-semibold text-amber-800">⏱️ ใช้เวลาไปทั้งหมด</div>
-            <div id="final-time-display" class="text-xl sm:text-2xl font-extrabold text-emerald-700 font-mono">00.0 วินาที</div>
+            <div class="text-[11px] font-semibold text-amber-800">⏱️ เวลาของคุณ</div>
+            <div id="final-time-display" class="text-lg sm:text-xl font-extrabold text-emerald-700 font-mono">00.0 วินาที</div>
           </div>
-          <div class="hidden sm:block w-px h-10 bg-amber-300"></div>
+          <div class="w-px h-8 bg-amber-300"></div>
           <div>
-            <div class="text-xs font-semibold text-amber-800">🏆 สถิติเร็วที่สุด</div>
+            <div class="text-[11px] font-semibold text-amber-800">🏆 สถิติเร็วที่สุด</div>
             <div id="best-time-display" class="text-base sm:text-lg font-extrabold text-amber-600 font-mono">--.- วินาที</div>
           </div>
         </div>
-        <div id="new-record-badge" class="hidden -mt-2 mb-3 inline-block bg-rose-500 text-white text-xs font-extrabold px-3 py-1 rounded-full animate-bounce">
+        <div id="new-record-badge" class="hidden -mt-1.5 mb-2.5 inline-block bg-rose-500 text-white text-xs font-extrabold px-3 py-0.5 rounded-full animate-bounce">
           🔥 ทำลายสถิติใหม่! เร็วสุดยอด!
         </div>
 
-        <p class="text-slate-600 text-sm sm:text-base mb-5">
-          สุดยอดเลยครับ! คุณช่วย <b>อ.เนตร</b> ผสมน้ำยาและกรองตัวอย่างดินครบทั้ง 7 ขั้นตอนอย่างแม่นยำ ดินตัวอย่างนี้อุดมสมบูรณ์สุดๆ!
-        </p>
+        <!-- ฟอร์มกรอกชื่อผู้ชนะเพื่อบันทึกลง Google Sheets -->
+        <div id="save-score-box" class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-3 mb-3 text-left">
+          <label for="player-name-input" class="block text-xs font-bold text-sky-900 mb-1">
+            ✍️ กรอกชื่อผู้พิชิตเพื่อบันทึกสถิติ:
+          </label>
+          <div class="flex gap-2">
+            <input id="player-name-input" type="text" maxlength="25" placeholder="เช่น น้องต้นกล้า / อ.เนตร" class="flex-1 px-3 py-2 rounded-xl border border-sky-300 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white" />
+            <button id="btn-submit-score" onclick="submitWinnerScore()" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs sm:text-sm shadow transition active:scale-95 whitespace-nowrap cursor-pointer">
+              💾 บันทึกสถิติ
+            </button>
+          </div>
+          <div id="save-score-status" class="text-[11px] font-semibold text-slate-500 mt-1.5">
+            บันทึกชื่อและเวลาลงทำเนียบผู้เล่นที่เร็วที่สุด
+          </div>
+        </div>
 
-        <button onclick="startGame()" class="game-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-lg cursor-pointer">
+        <!-- ตารางแสดง Top 3 ย่อในหน้าชนะ -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-2.5 mb-3.5 text-left">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-extrabold text-slate-700">🏅 ทำเนียบผู้เล่นเร็วที่สุด (Top 3)</span>
+            <button onclick="toggleLeaderboardModal()" class="text-[11px] font-bold text-sky-600 hover:underline">ดูทั้งหมด ↗</button>
+          </div>
+          <div id="victory-top3-list" class="space-y-1 text-xs">
+            <div class="text-slate-400 text-center py-1">กำลังโหลดข้อมูล...</div>
+          </div>
+        </div>
+
+        <button onclick="startGame()" class="game-btn w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-base sm:text-lg cursor-pointer">
           🔁 เล่นอีกครั้ง
         </button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- หน้าต่างทำเนียบสถิติ (Leaderboard Modal) -->
+    <!-- ========================================== -->
+    <div id="modal-leaderboard" class="hidden absolute inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border-4 border-sky-400 pop-in">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">🏆 ทำเนียบผู้พิชิตไนโตรเจน</h3>
+          <button onclick="toggleLeaderboardModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 font-bold text-slate-700">✕</button>
+        </div>
+        <div id="sheet-connection-badge" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 mb-3">
+          ℹ️ โหมดบันทึกในเครื่อง (ยังไม่ได้ใส่ลิงก์ Google Sheets)
+        </div>
+        <div id="full-leaderboard-list" class="space-y-2 text-sm mb-4 max-h-64 overflow-y-auto">
+          <!-- รายการอันดับจะถูกเติมด้วย JS -->
+        </div>
+        <div class="flex gap-2">
+          <button onclick="fetchLeaderboard(true)" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm border border-slate-300">
+            🔄 รีเฟรช
+          </button>
+          <button onclick="toggleLeaderboardModal()" class="game-btn flex-1 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-extrabold text-sm">
+            ปิดหน้าต่าง
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1019,7 +1062,14 @@
     let timerIntervalId = null;
     let gameStartTime = 0;
     let elapsedSeconds = 0;
+    let lastCompletedTime = 0;
+    let hasSavedCurrentRound = false;
     const BEST_TIME_KEY = 'ajarn_net_nitrogen_best_time';
+    const LOCAL_SCORES_KEY = 'ajarn_net_nitrogen_scores_v1';
+    const LAST_NAME_KEY = 'ajarn_net_nitrogen_last_player';
+
+    // ⚠️ นำลิงก์ Web App URL ที่ได้จากการ Deploy Google Apps Script มาวางใส่ในเครื่องหมายคำพูดด้านล่างนี้ครับ
+    const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx0hk8QCo_XYk9csVgj8SocW6DNH2NzF2CmrUdm_3PKxwGri0jex05VVL5CDZ5b4vW9Lw/exec";
 
     function formatTimerHUD(sec) {
       const mins = Math.floor(sec / 60);
@@ -1311,7 +1361,9 @@
         if (currentStep === 7) {
           isGameActive = false;
           stopTimer();
-          const finalSec = (performance.now() - gameStartTime) / 1000;
+          const finalSec = parseFloat(((performance.now() - gameStartTime) / 1000).toFixed(1));
+          lastCompletedTime = finalSec;
+          hasSavedCurrentRound = false;
           document.getElementById('timer-display').textContent = formatTimerHUD(finalSec);
 
           // จัดการสถิติเวลาที่เร็วที่สุด (Best Time)
@@ -1329,6 +1381,26 @@
 
           document.getElementById('final-time-display').textContent = `${finalSec.toFixed(1)} วินาที`;
           document.getElementById('best-time-display').textContent = `${bestSec.toFixed(1)} วินาที`;
+
+          // เตรียมฟอร์มกรอกชื่อผู้ชนะ
+          const nameInput = document.getElementById('player-name-input');
+          const savedName = localStorage.getItem(LAST_NAME_KEY) || '';
+          nameInput.value = savedName;
+          nameInput.disabled = false;
+
+          const submitBtn = document.getElementById('btn-submit-score');
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 บันทึกสถิติ';
+          submitBtn.classList.remove('bg-emerald-600', 'opacity-70');
+          submitBtn.classList.add('bg-sky-600', 'hover:bg-sky-500');
+
+          document.getElementById('save-score-status').textContent = GOOGLE_SHEET_WEBAPP_URL
+            ? '🟢 พร้อมส่งสถิติขึ้น Google Sheets!'
+            : '🟡 บันทึกลงตารางสถิติ (ใส่ลิงก์ Google Sheets ในโค้ดเพื่อแชร์ออนไลน์)';
+          document.getElementById('save-score-status').className = 'text-[11px] font-semibold text-slate-600 mt-1.5';
+
+          // โหลดตาราง Top 3 ล่าสุด
+          fetchLeaderboard(false);
 
           setTimeout(() => {
             playVictorySound();
@@ -1444,6 +1516,200 @@
       updateGuideList();
       const modal = document.getElementById('modal-guide');
       modal.classList.toggle('hidden');
+    }
+
+    // ==========================================
+    // 9. ระบบเชื่อมต่อ Google Sheets & ตารางสถิติ
+    // ==========================================
+    function getLocalScores() {
+      try {
+        const raw = localStorage.getItem(LOCAL_SCORES_KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        return Array.isArray(list) ? list : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveLocalScore(name, timeSec) {
+      const list = getLocalScores();
+      list.push({
+        name: name,
+        time: parseFloat(timeSec),
+        date: new Date().toLocaleDateString('th-TH')
+      });
+      list.sort((a, b) => a.time - b.time);
+      const top20 = list.slice(0, 20);
+      try {
+        localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(top20));
+      } catch (e) {}
+      return top20;
+    }
+
+    async function submitWinnerScore() {
+      if (hasSavedCurrentRound) return;
+      initAudio();
+
+      const nameInput = document.getElementById('player-name-input');
+      const statusEl = document.getElementById('save-score-status');
+      const submitBtn = document.getElementById('btn-submit-score');
+
+      let playerName = nameInput.value.trim();
+      if (!playerName) {
+        playerName = 'นักทดลองนิรนาม';
+        nameInput.value = playerName;
+      }
+
+      localStorage.setItem(LAST_NAME_KEY, playerName);
+      hasSavedCurrentRound = true;
+      nameInput.disabled = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳ กำลังบันทึก...';
+
+      // บันทึกสำรองลงเครื่องเสมอ
+      const updatedLocal = saveLocalScore(playerName, lastCompletedTime);
+
+      if (GOOGLE_SHEET_WEBAPP_URL) {
+        try {
+          statusEl.textContent = '⏳ กำลังส่งข้อมูลไปยัง Google Sheets...';
+          // ส่งแบบ text/plain เพื่อหลีกเลี่ยงปัญหา CORS Preflight ของ Google Apps Script
+          await fetch(GOOGLE_SHEET_WEBAPP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              name: playerName,
+              time: lastCompletedTime
+            })
+          });
+
+          playTone(783.99, 'sine', 0.15, 0.2);
+          submitBtn.textContent = '✅ บันทึกแล้ว';
+          submitBtn.classList.remove('bg-sky-600', 'hover:bg-sky-500');
+          submitBtn.classList.add('bg-emerald-600');
+          statusEl.textContent = `✅ บันทึกสถิติของ "${playerName}" (${lastCompletedTime.toFixed(1)} วินาที) ลง Google Sheets สำเร็จ!`;
+          statusEl.className = 'text-[11px] font-bold text-emerald-700 mt-1.5';
+
+          // ดึงข้อมูลล่าสุดจากชีตมาอัปเดตตาราง
+          setTimeout(() => fetchLeaderboard(false), 600);
+        } catch (err) {
+          submitBtn.textContent = '✅ บันทึกในเครื่องแล้ว';
+          statusEl.textContent = '⚠️ ส่งขึ้นชีตไม่สำเร็จ แต่บันทึกสถิติในเครื่องเรียบร้อยแล้วครับ';
+          statusEl.className = 'text-[11px] font-semibold text-amber-700 mt-1.5';
+          renderLeaderboardLists(updatedLocal);
+        }
+      } else {
+        playTone(783.99, 'sine', 0.15, 0.2);
+        submitBtn.textContent = '✅ บันทึกแล้ว';
+        submitBtn.classList.remove('bg-sky-600', 'hover:bg-sky-500');
+        submitBtn.classList.add('bg-emerald-600');
+        statusEl.textContent = `✅ บันทึกชื่อ "${playerName}" (${lastCompletedTime.toFixed(1)} วินาที) เรียบร้อย!`;
+        statusEl.className = 'text-[11px] font-bold text-emerald-700 mt-1.5';
+        renderLeaderboardLists(updatedLocal);
+      }
+    }
+
+    async function fetchLeaderboard(showLoading = true) {
+      const badge = document.getElementById('sheet-connection-badge');
+      const localScores = getLocalScores();
+
+      if (!GOOGLE_SHEET_WEBAPP_URL) {
+        if (badge) {
+          badge.textContent = 'ℹ️ โหมดบันทึกในเครื่อง (วางลิงก์ Google Apps Script ในโค้ดเพื่อออนไลน์)';
+          badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 mb-3';
+        }
+        renderLeaderboardLists(localScores);
+        return;
+      }
+
+      if (badge) {
+        badge.textContent = '🟢 เชื่อมต่อ Google Sheets ออนไลน์แล้ว';
+        badge.className = 'text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 mb-3';
+      }
+
+      if (showLoading) {
+        const fullList = document.getElementById('full-leaderboard-list');
+        if (fullList) fullList.innerHTML = '<div class="text-center text-slate-400 py-4">⏳ กำลังดึงข้อมูลจาก Google Sheets...</div>';
+      }
+
+      try {
+        const res = await fetch(GOOGLE_SHEET_WEBAPP_URL);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const sorted = data
+            .map(item => ({
+              name: String(item.name || 'ไม่ระบุชื่อ'),
+              time: parseFloat(item.time)
+            }))
+            .filter(item => !isNaN(item.time))
+            .sort((a, b) => a.time - b.time);
+
+          if (sorted.length > 0) {
+            localStorage.setItem(BEST_TIME_KEY, sorted[0].time.toFixed(1));
+            const bestDisplay = document.getElementById('best-time-display');
+            if (bestDisplay) bestDisplay.textContent = `${sorted[0].time.toFixed(1)} วินาที`;
+          }
+
+          renderLeaderboardLists(sorted);
+        } else {
+          renderLeaderboardLists(localScores);
+        }
+      } catch (err) {
+        renderLeaderboardLists(localScores);
+      }
+    }
+
+    function renderLeaderboardLists(scores) {
+      const medals = ['🥇', '🥈', '🥉', '4.', '5.'];
+      const top5 = scores.slice(0, 5);
+      const top3 = scores.slice(0, 3);
+
+      const fullListEl = document.getElementById('full-leaderboard-list');
+      if (fullListEl) {
+        if (top5.length === 0) {
+          fullListEl.innerHTML = '<div class="text-center text-slate-400 py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-300">ยังไม่มีบันทึกสถิติ ลองเล่นให้ชนะเป็นคนแรกเลย! 🚀</div>';
+        } else {
+          fullListEl.innerHTML = top5.map((row, i) => `
+            <div class="flex items-center justify-between px-3 py-2 rounded-xl border ${i === 0 ? 'bg-amber-50 border-amber-300 font-bold' : 'bg-slate-50 border-slate-200'}">
+              <div class="flex items-center gap-2 truncate pr-2">
+                <span class="text-base">${medals[i] || (i + 1) + '.'}</span>
+                <span class="text-slate-800 truncate">${escapeHTML(row.name)}</span>
+              </div>
+              <span class="font-mono font-extrabold text-emerald-700 whitespace-nowrap">${row.time.toFixed(1)} วินาที</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      const vicTop3El = document.getElementById('victory-top3-list');
+      if (vicTop3El) {
+        if (top3.length === 0) {
+          vicTop3El.innerHTML = '<div class="text-slate-400 text-center py-1">กรอกชื่อด้านบนเพื่อขึ้นอันดับ 1 คนแรก!</div>';
+        } else {
+          vicTop3El.innerHTML = top3.map((row, i) => `
+            <div class="flex items-center justify-between px-2.5 py-1 rounded-lg ${i === 0 ? 'bg-amber-100/80 font-bold text-amber-950' : 'bg-white text-slate-700'}">
+              <span class="truncate pr-2">${medals[i]} ${escapeHTML(row.name)}</span>
+              <span class="font-mono font-bold text-emerald-700 whitespace-nowrap">${row.time.toFixed(1)} วิ</span>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    function escapeHTML(str) {
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    function toggleLeaderboardModal() {
+      initAudio();
+      playTone(650, 'sine', 0.08, 0.15);
+      const modal = document.getElementById('modal-leaderboard');
+      const isOpening = modal.classList.contains('hidden');
+      modal.classList.toggle('hidden');
+      if (isOpening) {
+        fetchLeaderboard(true);
+      }
     }
 
     // ปรับตำแหน่งไอเทมอัตโนมัติเมื่อหมุนจอหรือย่อขยายหน้าต่าง
