@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Super อ.เนตร พิชิต ไนโตรเจน</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Kanit & Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700;800&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Prompt', 'Kanit', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    h1, h2, h3, .font-title {
+      font-family: 'Kanit', sans-serif;
+    }
+
+    /* แอนิเมชันหน้าจอสั่นเมื่อระเบิด */
+    @keyframes screenShake {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      10% { transform: translate(-12px, -10px) rotate(-2deg); }
+      20% { transform: translate(12px, 8px) rotate(2deg); }
+      30% { transform: translate(-10px, 12px) rotate(-1.5deg); }
+      40% { transform: translate(10px, -12px) rotate(1.5deg); }
+      50% { transform: translate(-8px, 6px) rotate(-1deg); }
+      60% { transform: translate(8px, -6px) rotate(1deg); }
+      70% { transform: translate(-6px, -4px) rotate(-0.5deg); }
+      80% { transform: translate(6px, 4px) rotate(0.5deg); }
+      90% { transform: translate(-3px, 2px) rotate(0deg); }
+    }
+
+    .shake-effect {
+      animation: screenShake 0.65s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    /* แอนิเมชันตัวละครหายใจเบาๆ */
+    @keyframes characterIdle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .char-idle {
+      animation: characterIdle 2.5s ease-in-out infinite;
+    }
+
+    /* แอนิเมชันเขย่าขวดทดลอง */
+    @keyframes bottleShake {
+      0%, 100% { transform: rotate(0deg) translateY(0); }
+      20% { transform: rotate(-15deg) translateY(-8px); }
+      40% { transform: rotate(15deg) translateY(-10px); }
+      60% { transform: rotate(-12deg) translateY(-6px); }
+      80% { transform: rotate(12deg) translateY(-8px); }
+    }
+
+    .bottle-shaking {
+      animation: bottleShake 0.5s ease-in-out infinite;
+    }
+
+    /* แอนิเมชันฟองอากาศลอยขึ้น */
+    @keyframes bubbleRise {
+      0% { transform: translateY(0) scale(0.8); opacity: 0.9; }
+      100% { transform: translateY(-45px) scale(1.3); opacity: 0; }
+    }
+
+    .bubble {
+      animation: bubbleRise 1.5s infinite ease-in;
+    }
+
+    /* แอนิเมชันเรืองแสงสีเขียวเมื่อชนะ */
+    @keyframes greenGlow {
+      0%, 100% { filter: drop-shadow(0 0 12px rgba(34, 197, 94, 0.8)); }
+      50% { filter: drop-shadow(0 0 28px rgba(74, 222, 128, 1)); }
+    }
+
+    .glow-success {
+      animation: greenGlow 1.8s ease-in-out infinite;
+    }
+
+    /* แอนิเมชันป้ายเด้งแจ้งเตือน */
+    @keyframes popIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .pop-in {
+      animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* สไตล์การ์ดไอเทมที่ลอยไปมา */
+    .floating-item {
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      will-change: transform, left, top;
+      z-index: 20;
+    }
+
+    .floating-item:hover {
+      transform: scale(1.1) !important;
+      z-index: 30;
+    }
+
+    .floating-item:active {
+      transform: scale(0.95) !important;
+    }
+
+    /* สไตล์ปุ่ม 3D เกม */
+    .game-btn {
+      transition: all 0.15s ease;
+      box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25);
+    }
+    .game-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 rgba(0, 0, 0, 0.25);
+    }
+    .game-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-emerald-950 text-slate-800 h-screen w-screen overflow-hidden flex items-center justify-center">
+
+  <!-- คอนเทนเนอร์หลักของเกม -->
+  <div id="game-wrapper" class="relative w-full h-full max-w-5xl max-h-[820px] bg-sky-100 sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col border-4 border-emerald-800">
+    
+    <!-- พื้นหลังห้องแลปธรรมชาติ (SVG Landscape & Lab Wall) -->
+    <div class="absolute inset-0 pointer-events-none z-0">
+      <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" class="w-full h-full">
+        <defs>
+          <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ecfdf5" />
+            <stop offset="70%" stop-color="#d1fae5" />
+            <stop offset="100%" stop-color="#a7f3d0" />
+          </linearGradient>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#38bdf8" />
+            <stop offset="100%" stop-color="#bae6fd" />
+          </linearGradient>
+          <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#b45309" />
+            <stop offset="20%" stop-color="#92400e" />
+            <stop offset="100%" stop-color="#78350f" />
+          </linearGradient>
+        </defs>
+
+        <!-- ผนังห้องแลป -->
+        <rect width="1000" height="700" fill="url(#wallGrad)" />
+        
+        <!-- ลายกระเบื้องผนังจางๆ -->
+        <g stroke="#a7f3d0" stroke-width="1.5" opacity="0.6">
+          <line x1="0" y1="150" x2="1000" y2="150" />
+          <line x1="0" y1="300" x2="1000" y2="300" />
+          <line x1="0" y1="450" x2="1000" y2="450" />
+          <line x1="200" y1="0" x2="200" y2="550" />
+          <line x1="500" y1="0" x2="500" y2="550" />
+          <line x1="800" y1="0" x2="800" y2="550" />
+        </g>
+
+        <!-- หน้าต่างห้องแลปเห็นธรรมชาติ -->
+        <g transform="translate(80, 75)">
+          <!-- กรอบหน้าต่างด้านนอก -->
+          <rect x="-10" y="-10" width="340" height="250" rx="16" fill="#78350f" />
+          <rect x="0" y="0" width="320" height="230" rx="10" fill="url(#skyGrad)" />
+          
+          <!-- ก้อนเมฆ -->
+          <g fill="#ffffff" opacity="0.85">
+            <circle cx="70" cy="50" r="22" />
+            <circle cx="95" cy="45" r="28" />
+            <circle cx="122" cy="52" r="20" />
+            <circle cx="230" cy="70" r="16" />
+            <circle cx="250" cy="68" r="20" />
+          </g>
+
+          <!-- ภูเขา -->
+          <polygon points="0,230 95,110 210,230" fill="#059669" />
+          <polygon points="130,230 245,95 320,230" fill="#047857" />
+          
+          <!-- ต้นไม้หน้าหน้าต่าง -->
+          <g transform="translate(30, 155)">
+            <rect x="16" y="45" width="8" height="30" fill="#78350f" />
+            <circle cx="20" cy="35" r="24" fill="#10b981" />
+            <circle cx="12" cy="42" r="16" fill="#059669" />
+          </g>
+          <g transform="translate(250, 165)">
+            <rect x="14" y="40" width="7" height="25" fill="#78350f" />
+            <circle cx="18" cy="30" r="22" fill="#34d399" />
+          </g>
+
+          <!-- ซี่หน้าต่าง -->
+          <rect x="155" y="0" width="10" height="230" fill="#92400e" />
+          <rect x="0" y="110" width="320" height="10" fill="#92400e" />
+          <rect x="-14" y="232" width="348" height="16" rx="6" fill="#92400e" />
+        </g>
+
+        <!-- ชั้นวางอุปกรณ์ด้านขวา -->
+        <g transform="translate(650, 110)">
+          <rect x="0" y="95" width="270" height="14" rx="5" fill="#92400e" />
+          <rect x="20" y="109" width="12" height="25" fill="#78350f" />
+          <rect x="238" y="109" width="12" height="25" fill="#78350f" />
+          
+          <!-- ขวดโหลตกแต่งบนชั้น -->
+          <rect x="30" y="35" width="36" height="60" rx="6" fill="#bae6fd" stroke="#0284c7" stroke-width="2" opacity="0.8" />
+          <rect x="36" y="27" width="24" height="8" rx="2" fill="#475569" />
+          <rect x="32" y="60" width="32" height="33" rx="4" fill="#38bdf8" opacity="0.6" />
+
+          <!-- ต้นไม้กระถางเล็ก -->
+          <polygon points="115,95 108,65 142,65 135,95" fill="#ea580c" />
+          <path d="M125,65 Q110,40 100,48 Q115,55 125,65" fill="#16a34a" />
+          <path d="M125,65 Q140,35 150,45 Q135,55 125,65" fill="#22c55e" />
+          <path d="M125,65 Q125,30 125,25 Q132,45 125,65" fill="#15803d" />
+
+          <!-- หนังสือคู่มือดิน -->
+          <rect x="175" y="45" width="18" height="50" rx="2" fill="#dc2626" />
+          <rect x="195" y="40" width="20" height="55" rx="2" fill="#2563eb" />
+          <rect x="217" y="48" width="16" height="47" rx="2" fill="#d97706" />
+        </g>
+
+        <!-- โต๊ะทดลองไม้ขนาดใหญ่ด้านล่าง -->
+        <rect x="0" y="510" width="1000" height="28" fill="#d97706" />
+        <rect x="0" y="538" width="1000" height="162" fill="url(#woodGrad)" />
+        <!-- ลายไม้บนโต๊ะ -->
+        <line x1="0" y1="580" x2="1000" y2="580" stroke="#78350f" stroke-width="3" opacity="0.5" />
+        <line x1="0" y1="635" x2="1000" y2="635" stroke="#78350f" stroke-width="3" opacity="0.5" />
+      </svg>
+    </div>
+
+    <!-- แถบควบคุมด้านบน (Header HUD) -->
+    <header class="relative z-30 flex items-center justify-between px-3 sm:px-6 py-2.5 bg-emerald-900/90 backdrop-blur-md text-white border-b-2 border-emerald-700 shadow-md">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span class="text-2xl sm:text-3xl">🧪</span>
+        <div>
+          <h1 class="text-base sm:text-xl font-extrabold tracking-wide text-amber-300 leading-tight">
+            Super อ.เนตร พิชิต ไนโตรเจน
+          </h1>
+          <p class="text-[11px] sm:text-xs text-emerald-200 hidden sm:block">
+            ภารกิจวิเคราะห์ธาตุไนโตรเจนในดินให้สำเร็จ!
+          </p>
+        </div>
+      </div>
+
+      <!-- แถบความคืบหน้าขั้นตอน & ปุ่มเสียง -->
+      <div class="flex items-center gap-1.5 sm:gap-3">
+        <!-- ตัวจับเวลา (Stopwatch) -->
+        <div id="hud-timer-box" class="hidden flex items-center gap-1.5 bg-slate-900/90 px-2.5 sm:px-3 py-1.5 rounded-full border border-amber-400/80 shadow-inner">
+          <span class="text-xs sm:text-sm">⏱️</span>
+          <span id="timer-display" class="text-xs sm:text-sm font-mono font-extrabold text-amber-300 tracking-wider">00:00.0</span>
+        </div>
+
+        <div id="hud-progress-box" class="hidden flex items-center gap-1.5 sm:gap-2 bg-emerald-950/80 px-2.5 sm:px-3 py-1.5 rounded-full border border-emerald-600">
+          <span class="text-xs sm:text-sm font-semibold text-emerald-300 hidden md:inline">ขั้นตอน:</span>
+          <span id="step-counter" class="text-xs sm:text-base font-extrabold text-amber-400">1 / 7</span>
+        </div>
+
+        <button id="btn-sound" onclick="toggleSound()" class="p-1.5 sm:p-2 rounded-full bg-emerald-800 hover:bg-emerald-700 border border-emerald-500 text-white transition active:scale-95" title="เปิด/ปิดเสียง">
+          <span id="sound-icon" class="text-base sm:text-lg">🔊</span>
+        </button>
+
+        <button id="btn-guide" onclick="toggleGuideModal()" class="px-2.5 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-emerald-950 font-bold text-xs sm:text-sm transition active:scale-95 shadow">
+          📋 คู่มือ
+        </button>
+      </div>
+    </header>
+
+    <!-- พื้นที่เล่นเกมหลัก (Arena) -->
+    <main id="play-arena" class="relative flex-1 w-full h-full overflow-hidden">
+      
+      <!-- กล่องข้อความสถานะ / คำใบ้ด้านบน -->
+      <div id="status-banner" class="hidden relative z-20 mx-auto mt-2 sm:mt-3 w-[92%] max-w-xl bg-white/95 backdrop-blur border-2 border-emerald-500 rounded-2xl px-4 py-2 shadow-lg text-center transition-all">
+        <div id="status-title" class="text-xs sm:text-sm font-bold text-emerald-700">เป้าหมายปัจจุบัน:</div>
+        <div id="status-message" class="text-sm sm:text-lg font-extrabold text-slate-800">
+          คลิกเลือกสิ่งที่ต้องทำในขั้นตอนที่ 1!
+        </div>
+      </div>
+
+      <!-- ชั้นวางไอเทมที่ลอยไปมา (Floating Items Layer) -->
+      <div id="floating-layer" class="absolute inset-0 z-20 overflow-hidden">
+        <!-- ไอเทมจะถูกสร้างด้วย JavaScript -->
+      </div>
+
+      <!-- โซนตัวละคร อ.เนตร และ โต๊ะทดลองด้านล่าง -->
+      <div class="absolute bottom-0 inset-x-0 h-[46%] sm:h-[48%] z-10 pointer-events-none flex items-end justify-between px-3 sm:px-10 pb-2 sm:pb-4">
+        
+        <!-- ตัวละครหลัก: อ.เนตร (SVG Chibi) -->
+        <div id="ajarn-container" class="relative w-36 sm:w-48 md:w-56 h-full flex items-end justify-center char-idle">
+          <!-- กล่องคำพูดของ อ.เนตร -->
+          <div id="ajarn-speech" class="absolute -top-6 sm:-top-4 left-2 sm:left-4 bg-white border-2 border-slate-800 rounded-2xl px-3 py-1.5 shadow-md text-xs sm:text-sm font-bold text-slate-800 whitespace-nowrap z-20">
+            พร้อมลุยแลปหรือยังครับ! 👨‍🔬
+            <div class="absolute -bottom-2 left-6 w-3 h-3 bg-white border-r-2 border-b-2 border-slate-800 transform rotate-45"></div>
+          </div>
+
+          <!-- SVG วาด อ.เนตร แบบการ์ตูนจิบิ -->
+          <svg id="ajarn-svg" viewBox="0 0 220 260" class="w-full h-auto max-h-[230px] sm:max-h-[270px] drop-shadow-xl">
+            <!-- เงาใต้เท้า -->
+            <ellipse cx="110" cy="248" rx="55" ry="10" fill="rgba(0,0,0,0.3)" />
+
+            <!-- ขาและกางเกงขายาวสีเข้ม -->
+            <rect x="82" y="195" width="22" height="45" rx="6" fill="#1e293b" />
+            <rect x="116" y="195" width="22" height="45" rx="6" fill="#1e293b" />
+            <!-- รองเท้า -->
+            <path d="M76,238 Q92,232 106,238 L106,246 L76,246 Z" fill="#0f172a" />
+            <path d="M114,238 Q128,232 144,238 L144,246 L114,246 Z" fill="#0f172a" />
+
+            <!-- ลำตัว: เสื้อเชิ้ตคอปกสีเขียวมิ้นต์ -->
+            <path d="M75,135 L145,135 L152,202 L68,202 Z" fill="#2dd4bf" />
+            <!-- ปกเสื้อเขียวมิ้นต์ -->
+            <polygon points="95,135 110,152 100,156 88,140" fill="#14b8a6" />
+            <polygon points="125,135 110,152 120,156 132,140" fill="#14b8a6" />
+            <!-- กระดุมเสื้อ -->
+            <circle cx="110" cy="164" r="2.5" fill="#0f766e" />
+            <circle cx="110" cy="178" r="2.5" fill="#0f766e" />
+            <!-- เข็มขัด -->
+            <rect x="70" y="192" width="80" height="8" fill="#334155" />
+            <rect x="104" y="191" width="12" height="10" rx="2" fill="#94a3b8" />
+
+            <!-- เสื้อแจ็คเก็ตสีน้ำเงินเข้มคลุมทับ -->
+            <path d="M70,134 L94,134 L96,204 L64,204 Q60,165 70,134 Z" fill="#1e3a8a" />
+            <path d="M150,134 L126,134 L124,204 L156,204 Q160,165 150,134 Z" fill="#1e3a8a" />
+            <!-- ปกเสื้อแจ็คเก็ต -->
+            <polygon points="86,134 96,134 95,165 82,152" fill="#172554" />
+            <polygon points="134,134 124,134 125,165 138,152" fill="#172554" />
+
+            <!-- แขนซ้าย (ถือขวดทดลองจิ๋ว) -->
+            <path d="M66,140 Q48,162 68,176" stroke="#1e3a8a" stroke-width="18" stroke-linecap="round" fill="none" />
+            <circle cx="72" cy="176" r="9" fill="#fed7aa" />
+            <!-- ขวดทดลองในมือ อ.เนตร -->
+            <g transform="translate(56, 148) rotate(-15)">
+              <rect x="6" y="0" width="8" height="10" fill="#e2e8f0" stroke="#475569" stroke-width="1.5" />
+              <circle cx="10" cy="20" r="12" fill="#bae6fd" stroke="#0284c7" stroke-width="2" />
+              <path d="M0,22 A10,10 0 0,0 20,22 Z" fill="#22c55e" />
+            </g>
+
+            <!-- แขนขวา -->
+            <path id="ajarn-right-arm" d="M154,140 Q174,162 156,178" stroke="#1e3a8a" stroke-width="18" stroke-linecap="round" fill="none" />
+            <circle id="ajarn-right-hand" cx="154" cy="178" r="9" fill="#fed7aa" />
+
+            <!-- ลำคอ -->
+            <rect x="100" y="120" width="20" height="18" rx="6" fill="#fdba74" />
+
+            <!-- ส่วนหัว (จิบิหัวโตน่ารัก) -->
+            <g id="ajarn-head">
+              <!-- หูซ้าย-ขวา -->
+              <circle cx="54" cy="84" r="11" fill="#fdba74" />
+              <circle cx="166" cy="84" r="11" fill="#fdba74" />
+
+              <!-- โครงหน้า -->
+              <rect x="58" y="24" width="104" height="104" rx="46" fill="#fed7aa" />
+              
+              <!-- แก้มอมชมพู -->
+              <ellipse cx="75" cy="95" rx="9" ry="5" fill="#fb7185" opacity="0.45" />
+              <ellipse cx="145" cy="95" rx="9" ry="5" fill="#fb7185" opacity="0.45" />
+
+              <!-- เส้นหน้าผากเล็กน้อยตามวัย -->
+              <path d="M92,44 Q110,41 128,44" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.5" />
+
+              <!-- ทรงผมสั้นสีดำแซมเทาเล็กน้อย -->
+              <path d="M56,72 C52,32 78,14 110,14 C142,14 168,32 164,72 C162,50 152,34 138,30 C122,25 98,25 82,30 C68,34 58,50 56,72 Z" fill="#1f2937" />
+              <!-- ผมแซมสีเทาด้านข้าง -->
+              <path d="M56,62 C55,72 57,80 61,84 L63,66 Z" fill="#9ca3af" />
+              <path d="M164,62 C165,72 163,80 159,84 L157,66 Z" fill="#9ca3af" />
+
+              <!-- กลุ่มผมฟูเมื่อระเบิด (ซ่อนไว้ปกติ) -->
+              <g id="exploded-hair" class="hidden">
+                <path d="M45,60 L30,35 L58,42 L55,15 L82,30 L95,5 L112,26 L132,6 L142,30 L168,16 L162,44 L190,38 L172,64" fill="#1f2937" stroke="#000" stroke-width="2" />
+                <!-- คราบเขม่าดำบนหน้า -->
+                <ellipse cx="88" cy="60" rx="14" ry="8" fill="#334155" opacity="0.75" />
+                <ellipse cx="132" cy="105" rx="16" ry="9" fill="#334155" opacity="0.75" />
+                <circle cx="110" cy="48" r="10" fill="#1e293b" opacity="0.65" />
+              </g>
+
+              <!-- คิ้ว -->
+              <path d="M74,64 Q86,59 98,64" stroke="#374151" stroke-width="3.5" stroke-linecap="round" fill="none" />
+              <path d="M122,64 Q134,59 146,64" stroke="#374151" stroke-width="3.5" stroke-linecap="round" fill="none" />
+
+              <!-- ดวงตาปกติ -->
+              <g id="eyes-normal">
+                <circle cx="86" cy="78" r="7" fill="#1e293b" />
+                <circle cx="84" cy="75" r="2.5" fill="#ffffff" />
+                <circle cx="134" cy="78" r="7" fill="#1e293b" />
+                <circle cx="132" cy="75" r="2.5" fill="#ffffff" />
+              </g>
+
+              <!-- ดวงตาตกใจ/มึนงงเมื่อระเบิด (ซ่อนไว้ปกติ) -->
+              <g id="eyes-exploded" class="hidden">
+                <circle cx="86" cy="78" r="10" fill="#ffffff" stroke="#1e293b" stroke-width="2" />
+                <circle cx="86" cy="78" r="3" fill="#1e293b" />
+                <circle cx="134" cy="78" r="10" fill="#ffffff" stroke="#1e293b" stroke-width="2" />
+                <circle cx="134" cy="78" r="3" fill="#1e293b" />
+              </g>
+
+              <!-- แว่นตากรอบดำเอกลักษณ์ อ.เนตร -->
+              <g id="glasses">
+                <rect x="67" y="66" width="38" height="25" rx="6" fill="rgba(255,255,255,0.18)" stroke="#111827" stroke-width="4" />
+                <rect x="115" y="66" width="38" height="25" rx="6" fill="rgba(255,255,255,0.18)" stroke="#111827" stroke-width="4" />
+                <!-- สะพานแว่น -->
+                <path d="M105,76 Q110,73 115,76" stroke="#111827" stroke-width="4" fill="none" />
+                <!-- ขาแว่น -->
+                <line x1="58" y1="76" x2="67" y2="76" stroke="#111827" stroke-width="3.5" />
+                <line x1="153" y1="76" x2="162" y2="76" stroke="#111827" stroke-width="3.5" />
+              </g>
+
+              <!-- จมูก -->
+              <path d="M110,82 L107,93 L113,94" stroke="#d97706" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+              <!-- ปากยิ้มปกติ -->
+              <path id="mouth-normal" d="M96,106 Q110,118 124,106" stroke="#991b1b" stroke-width="3.5" stroke-linecap="round" fill="none" />
+              
+              <!-- ปากอ้าค้างมีควันลอยเมื่อระเบิด -->
+              <g id="mouth-exploded" class="hidden">
+                <ellipse cx="110" cy="110" rx="10" ry="7" fill="#7f1d1d" />
+                <path d="M114,108 Q125,98 122,88" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.8" />
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <!-- โต๊ะทดลองตรงกลาง-ขวา: แสดงอุปกรณ์และปฏิกิริยาจริงตามขั้นตอน -->
+        <div class="relative flex-1 h-full flex flex-col items-center justify-end pb-1 sm:pb-3">
+          <div id="workbench-stage" class="relative w-64 sm:w-80 h-48 sm:h-56 flex items-end justify-center">
+            <!-- SVG แสดงสถานะขวดทดลองบนโต๊ะ -->
+            <svg id="workbench-svg" viewBox="0 0 320 220" class="w-full h-full overflow-visible drop-shadow-lg">
+              <!-- แผ่นรองทดลองบนโต๊ะ -->
+              <ellipse cx="160" cy="205" rx="125" ry="12" fill="#451a03" opacity="0.5" />
+
+              <!-- สถานะเริ่มต้น (ยังไม่มีขวด) -->
+              <g id="stage-empty">
+                <rect x="105" y="130" width="110" height="70" rx="12" fill="none" stroke="#fef3c7" stroke-width="3" stroke-dasharray="8 6" opacity="0.8" />
+                <text x="160" y="162" text-anchor="middle" fill="#fef3c7" font-size="14" font-weight="bold">พื้นที่วางอุปกรณ์</text>
+                <text x="160" y="182" text-anchor="middle" fill="#fde68a" font-size="12">(รอขวดทดสอบ)</text>
+              </g>
+
+              <!-- กลุ่มขวดทดสอบหลัก (Steps 1 - 6) -->
+              <g id="test-bottle-group" class="hidden" transform-origin="160 150">
+                <!-- ตัวขวดทดสอบแก้วใส -->
+                <path d="M132,75 L188,75 L196,95 L196,192 Q196,202 186,202 L134,202 Q124,202 124,192 L124,95 Z" fill="rgba(255, 255, 255, 0.45)" stroke="#e0f2fe" stroke-width="3.5" />
+                <!-- คอขวด -->
+                <rect x="138" y="55" width="44" height="20" fill="rgba(255, 255, 255, 0.5)" stroke="#e0f2fe" stroke-width="3" />
+                <rect x="134" y="50" width="52" height="7" rx="3" fill="#bae6fd" />
+
+                <!-- ขีดบอกปริมาตรข้างขวด -->
+                <g stroke="#0284c7" stroke-width="2" opacity="0.7">
+                  <line x1="130" y1="175" x2="142" y2="175" />
+                  <line x1="130" y1="150" x2="146" y2="150" />
+                  <line x1="130" y1="125" x2="142" y2="125" />
+                </g>
+
+                <!-- ชั้นของเหลว N-1 (Step 3) -->
+                <rect id="layer-n1" class="hidden" x="126" y="155" width="68" height="45" rx="4" fill="#38bdf8" opacity="0.65" />
+                
+                <!-- ชั้นของเหลว N-2 (Step 4) -->
+                <rect id="layer-n2" class="hidden" x="126" y="142" width="68" height="58" rx="4" fill="#fbbf24" opacity="0.75" />
+
+                <!-- ชั้นของเหลวหลังเขย่า & เติม N-3 (Step 5-6) -->
+                <rect id="layer-n3" class="hidden" x="126" y="105" width="68" height="95" rx="6" fill="#34d399" opacity="0.85" />
+
+                <!-- ชั้นดินในขวด (Step 2) -->
+                <path id="layer-soil" class="hidden" d="M126,184 Q145,176 160,182 Q175,188 194,182 L194,196 Q194,200 188,200 L132,200 Q126,200 126,196 Z" fill="#78350f" />
+
+                <!-- ฝาปิดขวดทดสอบ (Step 5) -->
+                <g id="bottle-cap" class="hidden">
+                  <rect x="135" y="36" width="50" height="16" rx="4" fill="#ef4444" stroke="#991b1b" stroke-width="2" />
+                  <line x1="143" y1="38" x2="143" y2="50" stroke="#991b1b" stroke-width="2" />
+                  <line x1="152" y1="38" x2="152" y2="50" stroke="#991b1b" stroke-width="2" />
+                  <line x1="168" y1="38" x2="168" y2="50" stroke="#991b1b" stroke-width="2" />
+                  <line x1="177" y1="38" x2="177" y2="50" stroke="#991b1b" stroke-width="2" />
+                </g>
+
+                <!-- ฟองปฏิกิริยา -->
+                <g id="bottle-bubbles" class="hidden">
+                  <circle cx="145" cy="160" r="4" fill="#ffffff" class="bubble" />
+                  <circle cx="165" cy="170" r="5" fill="#ffffff" class="bubble" style="animation-delay: 0.4s" />
+                  <circle cx="178" cy="150" r="3.5" fill="#ffffff" class="bubble" style="animation-delay: 0.8s" />
+                </g>
+
+                <!-- ป้ายชื่อขวด -->
+                <rect x="138" y="102" width="44" height="18" rx="3" fill="#ffffff" opacity="0.9" />
+                <text x="160" y="114" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="bold">ขวดทดสอบ</text>
+              </g>
+
+              <!-- ชุดกรองและขวดกรอง (Step 7 - ผลลัพธ์สีเขียวสดใส!) -->
+              <g id="filtering-flask-group" class="hidden glow-success">
+                <!-- ขวดรูปชมพู่ (Erlenmeyer Filtering Flask) -->
+                <path d="M144,95 L176,95 L208,188 Q212,202 196,202 L124,202 Q108,202 112,188 Z" fill="rgba(255,255,255,0.5)" stroke="#dcfce7" stroke-width="3.5" />
+                <!-- สารละลายสีเขียวสดใส ไนโตรเจนสูงมาก! -->
+                <path d="M126,146 L194,146 L206,188 Q209,199 195,199 L125,199 Q111,199 114,188 Z" fill="#16a34a" />
+                <path d="M126,146 L194,146 L202,175 L118,175 Z" fill="#22c55e" opacity="0.85" />
+                
+                <!-- กรวยกรอง + กระดาษกรองด้านบน -->
+                <polygon points="124,42 196,42 168,85 168,108 152,108 152,85" fill="rgba(255,255,255,0.75)" stroke="#cbd5e1" stroke-width="2.5" />
+                <!-- กระดาษกรองสีขาวพับจีบ -->
+                <polygon points="128,42 192,42 160,82" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+                <!-- หยดน้ำยาสีเขียวหยดลงขวด -->
+                <circle cx="160" cy="122" r="4" fill="#4ade80" />
+                <circle cx="160" cy="136" r="3" fill="#4ade80" />
+
+                <!-- ประกายวิ้งๆ รอบขวด -->
+                <text x="95" y="130" font-size="22">✨</text>
+                <text x="205" y="120" font-size="24">✨</text>
+                <text x="150" y="30" font-size="20">🌟</text>
+              </g>
+            </svg>
+          </div>
+          <!-- ป้ายชื่อสถานะอุปกรณ์บนโต๊ะ -->
+          <div id="workbench-label" class="bg-amber-950/90 text-amber-200 border border-amber-600 px-3 py-1 rounded-full text-xs sm:text-sm font-bold shadow">
+            โต๊ะทดลอง: ว่างเปล่า
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- หน้าจอซ้อนทับ 1: หน้าจอเริ่มเกม (Start Screen) -->
+    <!-- ========================================== -->
+    <div id="screen-start" class="absolute inset-0 z-40 bg-emerald-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-7 text-center shadow-2xl border-4 border-amber-400 pop-in my-auto">
+        <div class="inline-block bg-emerald-100 text-emerald-800 font-bold px-3.5 py-1 rounded-full text-xs sm:text-sm mb-2 border border-emerald-300">
+          🌿 ห้องแลปธรรมชาติหรรษา 🔬
+        </div>
+
+        <!-- รูปการ์ตูน อ.เนตร ถือต้นไม้สีเขียวบนหน้าแรก -->
+        <div class="relative mx-auto w-32 h-36 sm:w-36 sm:h-40 mb-1 flex items-center justify-center char-idle">
+          <div class="absolute inset-2 bg-emerald-100 rounded-full border-2 border-emerald-300 shadow-inner"></div>
+          <svg viewBox="0 0 220 250" class="relative w-full h-full drop-shadow-md">
+            <!-- เงาใต้เท้า -->
+            <ellipse cx="110" cy="240" rx="52" ry="8" fill="rgba(16, 185, 129, 0.25)" />
+            <!-- ขาและรองเท้า -->
+            <rect x="84" y="190" width="20" height="42" rx="6" fill="#1e293b" />
+            <rect x="116" y="190" width="20" height="42" rx="6" fill="#1e293b" />
+            <path d="M78,230 Q92,225 106,230 L106,238 L78,238 Z" fill="#0f172a" />
+            <path d="M114,230 Q128,225 142,230 L142,238 L114,238 Z" fill="#0f172a" />
+
+            <!-- เสื้อเชิ้ตคอปกสีเขียวมิ้นต์ -->
+            <path d="M76,132 L144,132 L150,196 L70,196 Z" fill="#2dd4bf" />
+            <polygon points="95,132 110,148 100,152 88,137" fill="#14b8a6" />
+            <polygon points="125,132 110,148 120,152 132,137" fill="#14b8a6" />
+            <!-- เสื้อแจ็คเก็ตสีน้ำเงินเข้ม -->
+            <path d="M71,131 L93,131 L95,198 L65,198 Q61,162 71,131 Z" fill="#1e3a8a" />
+            <path d="M149,131 L127,131 L125,198 L155,198 Q159,162 149,131 Z" fill="#1e3a8a" />
+
+            <!-- คอและศีรษะ อ.เนตร -->
+            <rect x="100" y="118" width="20" height="16" rx="6" fill="#fdba74" />
+            <circle cx="56" cy="82" r="10" fill="#fdba74" />
+            <circle cx="164" cy="82" r="10" fill="#fdba74" />
+            <rect x="60" y="24" width="100" height="100" rx="44" fill="#fed7aa" />
+            <!-- แก้มชมพู -->
+            <ellipse cx="77" cy="92" rx="8" ry="4.5" fill="#fb7185" opacity="0.45" />
+            <ellipse cx="143" cy="92" rx="8" ry="4.5" fill="#fb7185" opacity="0.45" />
+            <!-- เส้นหน้าผาก -->
+            <path d="M92,43 Q110,40 128,43" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.5" />
+            <!-- ทรงผมสีดำแซมเทา -->
+            <path d="M58,70 C54,32 80,14 110,14 C140,14 166,32 162,70 C160,48 150,33 136,29 C120,24 100,24 84,29 C70,33 60,48 58,70 Z" fill="#1f2937" />
+            <path d="M58,60 C57,70 59,78 63,82 L65,64 Z" fill="#9ca3af" />
+            <path d="M162,60 C163,70 161,78 157,82 L155,64 Z" fill="#9ca3af" />
+            <!-- คิ้ว ตา แว่นตา และรอยยิ้ม -->
+            <path d="M76,62 Q87,57 98,62" stroke="#374151" stroke-width="3.5" stroke-linecap="round" fill="none" />
+            <path d="M122,62 Q133,57 144,62" stroke="#374151" stroke-width="3.5" stroke-linecap="round" fill="none" />
+            <circle cx="87" cy="76" r="6.5" fill="#1e293b" />
+            <circle cx="85" cy="73.5" r="2.2" fill="#ffffff" />
+            <circle cx="133" cy="76" r="6.5" fill="#1e293b" />
+            <circle cx="131" cy="73.5" r="2.2" fill="#ffffff" />
+            <rect x="69" y="64" width="36" height="24" rx="6" fill="rgba(255,255,255,0.18)" stroke="#111827" stroke-width="3.8" />
+            <rect x="115" y="64" width="36" height="24" rx="6" fill="rgba(255,255,255,0.18)" stroke="#111827" stroke-width="3.8" />
+            <path d="M105,74 Q110,71 115,74" stroke="#111827" stroke-width="3.8" fill="none" />
+            <path d="M110,80 L107,90 L113,91" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" fill="none" />
+            <path d="M96,103 Q110,115 124,103" stroke="#991b1b" stroke-width="3.5" stroke-linecap="round" fill="none" />
+
+            <!-- กระถางต้นไม้สีเขียวสดใสที่ อ.เนตร ประคองถือไว้ตรงกลาง -->
+            <g transform="translate(82, 118)">
+              <!-- ลำต้นและใบไม้สีเขียวชอุ่ม -->
+              <path d="M28,46 L28,22" stroke="#15803d" stroke-width="4" stroke-linecap="round" />
+              <!-- ใบซ้ายล่าง -->
+              <path d="M28,38 Q10,32 6,20 Q20,20 28,34 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5" />
+              <!-- ใบขวาล่าง -->
+              <path d="M28,36 Q46,30 50,18 Q36,18 28,32 Z" fill="#16a34a" stroke="#15803d" stroke-width="1.5" />
+              <!-- ใบซ้ายบน -->
+              <path d="M28,26 Q12,14 14,2 Q26,8 28,22 Z" fill="#4ade80" stroke="#15803d" stroke-width="1.5" />
+              <!-- ใบขวาบน -->
+              <path d="M28,24 Q44,12 42,0 Q30,6 28,20 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5" />
+              <!-- ยอดอ่อนตรงกลาง -->
+              <path d="M28,20 Q24,6 28,-4 Q32,6 28,20 Z" fill="#86efac" stroke="#15803d" stroke-width="1.2" />
+              <!-- ดินในกระถาง -->
+              <ellipse cx="28" cy="46" rx="17" ry="4" fill="#78350f" />
+              <!-- ตัวกระถางดินเผา -->
+              <polygon points="10,46 46,46 41,72 15,72" fill="#ea580c" stroke="#9a3412" stroke-width="2" />
+              <rect x="8" y="43" width="40" height="6" rx="2" fill="#f97316" stroke="#9a3412" stroke-width="1.5" />
+            </g>
+
+            <!-- แขนและมือทั้งสองข้างประคองกระถางต้นไม้ -->
+            <path d="M68,138 Q62,168 89,174" stroke="#1e3a8a" stroke-width="16" stroke-linecap="round" fill="none" />
+            <path d="M152,138 Q158,168 131,174" stroke="#1e3a8a" stroke-width="16" stroke-linecap="round" fill="none" />
+            <circle cx="92" cy="174" r="8.5" fill="#fed7aa" stroke="#d97706" stroke-width="1.5" />
+            <circle cx="128" cy="174" r="8.5" fill="#fed7aa" stroke="#d97706" stroke-width="1.5" />
+          </svg>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-900 mb-1.5 leading-tight">
+          Super อ.เนตร <span class="text-emerald-600">พิชิต ไนโตรเจน</span>
+        </h2>
+        <p class="text-slate-600 text-xs sm:text-sm mb-3.5 leading-relaxed">
+          ช่วย <b>อ.เนตร</b> เลือกอุปกรณ์และน้ำยาที่ลอยไปมาให้ถูกตามลำดับทั้ง <b>7 ขั้นตอน</b> เพื่อวิเคราะห์ธาตุไนโตรเจนในดิน ระวังอย่าหยิบส่วนผสมตัวหลอก ไม่งั้นห้องแลประเบิด!
+        </p>
+
+        <!-- สรุปขั้นตอนย่อให้ผู้เล่นอ่านก่อนเริ่ม -->
+        <div class="bg-emerald-50 rounded-2xl p-3 mb-4 text-left border border-emerald-200 max-h-36 overflow-y-auto text-xs sm:text-sm space-y-1 text-slate-700">
+          <div class="font-bold text-emerald-800 mb-0.5">📋 ลำดับขั้นตอนการทดลองที่ถูกต้อง:</div>
+          <div><b>1.</b> เตรียม ขวดทดสอบ</div>
+          <div><b>2.</b> ตักดินใส่ ขวดทดสอบ 1 ช้อน</div>
+          <div><b>3.</b> เติมน้ำยา N-1 (3 มล.)</div>
+          <div><b>4.</b> เติมน้ำยา N-2 (1 มล.)</div>
+          <div><b>5.</b> ปิดฝา ขวดทดสอบ และแกว่งเบาๆ 5 นาที</div>
+          <div><b>6.</b> เติมน้ำยา N-3 (10 มล.)</div>
+          <div><b>7.</b> กรองของเหลวทั้งหมด ด้วยกระดาษกรอง ใส่ ขวดกรอง</div>
+        </div>
+
+        <button onclick="startGame()" class="game-btn w-full py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-extrabold text-lg sm:text-xl tracking-wide cursor-pointer">
+          🚀 เริ่มทดลองเลย!
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- หน้าจอซ้อนทับ 2: ระเบิดห้องแลป (Game Over) -->
+    <!-- ========================================== -->
+    <div id="screen-gameover" class="hidden absolute inset-0 z-40 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl border-4 border-rose-500 pop-in">
+        <div class="text-6xl sm:text-7xl mb-2 animate-bounce">💥🤯💨</div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-rose-600 mb-2">
+          ตูมมม! ห้องแลประเบิด!
+        </h2>
+        <p id="explosion-reason" class="text-slate-700 font-semibold text-base sm:text-lg mb-4 bg-rose-50 p-3 rounded-2xl border border-rose-200">
+          ใส่ผิดขั้นตอน ห้องแลปกลายเป็นโกโก้ครั้นช์!
+        </p>
+        <div id="explosion-hint" class="text-xs sm:text-sm text-slate-500 mb-6">
+          คำใบ้: ลองดูลำดับขั้นตอนในปุ่ม "คู่มือ" ด้านบนขวาได้นะ!
+        </div>
+
+        <button onclick="startGame()" class="game-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400 text-white font-extrabold text-lg cursor-pointer">
+          🔄 เริ่มทดลองใหม่
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- หน้าจอซ้อนทับ 3: ชนะการทดลอง (Victory) -->
+    <!-- ========================================== -->
+    <div id="screen-victory" class="hidden absolute inset-0 z-40 bg-emerald-950/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center shadow-2xl border-4 border-emerald-400 pop-in relative overflow-hidden">
+        <div class="text-5xl sm:text-6xl mb-2">🎉🧪✨</div>
+        
+        <!-- ขวดสารละลายสีเขียวเรืองแสง -->
+        <div class="my-3 flex justify-center">
+          <div class="w-24 h-24 rounded-full bg-emerald-100 border-4 border-emerald-400 flex items-center justify-center shadow-inner glow-success">
+            <svg viewBox="0 0 100 100" class="w-16 h-16">
+              <path d="M38,20 L62,20 L82,82 Q85,92 74,92 L26,92 Q15,92 18,82 Z" fill="#dcfce7" stroke="#15803d" stroke-width="4" />
+              <path d="M27,55 L73,55 L80,82 Q82,90 73,90 L27,90 Q18,90 20,82 Z" fill="#22c55e" />
+              <circle cx="42" cy="70" r="4" fill="#bbf7d0" />
+              <circle cx="58" cy="78" r="3" fill="#bbf7d0" />
+              <circle cx="50" cy="63" r="2.5" fill="#bbf7d0" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="inline-block bg-emerald-600 text-white font-extrabold px-5 py-2.5 rounded-2xl text-xl sm:text-2xl shadow-lg mb-3">
+          "ทดสอบสำเร็จ ไนโตรเจนสูงมาก"
+        </div>
+
+        <!-- สรุปเวลาที่ใช้และสถิติสูงสุด -->
+        <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3 mb-4 flex flex-col sm:flex-row items-center justify-around gap-2">
+          <div>
+            <div class="text-xs font-semibold text-amber-800">⏱️ ใช้เวลาไปทั้งหมด</div>
+            <div id="final-time-display" class="text-xl sm:text-2xl font-extrabold text-emerald-700 font-mono">00.0 วินาที</div>
+          </div>
+          <div class="hidden sm:block w-px h-10 bg-amber-300"></div>
+          <div>
+            <div class="text-xs font-semibold text-amber-800">🏆 สถิติเร็วที่สุด</div>
+            <div id="best-time-display" class="text-base sm:text-lg font-extrabold text-amber-600 font-mono">--.- วินาที</div>
+          </div>
+        </div>
+        <div id="new-record-badge" class="hidden -mt-2 mb-3 inline-block bg-rose-500 text-white text-xs font-extrabold px-3 py-1 rounded-full animate-bounce">
+          🔥 ทำลายสถิติใหม่! เร็วสุดยอด!
+        </div>
+
+        <p class="text-slate-600 text-sm sm:text-base mb-5">
+          สุดยอดเลยครับ! คุณช่วย <b>อ.เนตร</b> ผสมน้ำยาและกรองตัวอย่างดินครบทั้ง 7 ขั้นตอนอย่างแม่นยำ ดินตัวอย่างนี้อุดมสมบูรณ์สุดๆ!
+        </p>
+
+        <button onclick="startGame()" class="game-btn w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-lg cursor-pointer">
+          🔁 เล่นอีกครั้ง
+        </button>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- หน้าต่างคู่มือขั้นตอน (Guide Modal) -->
+    <!-- ========================================== -->
+    <div id="modal-guide" class="hidden absolute inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-4 border-amber-400 pop-in">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xl font-extrabold text-emerald-900">📋 คู่มือขั้นตอนการทดลอง</h3>
+          <button onclick="toggleGuideModal()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 font-bold text-slate-700">✕</button>
+        </div>
+        <div id="guide-list" class="space-y-2 text-sm text-slate-700 mb-5">
+          <!-- รายการขั้นตอนจะอัปเดตสถานะติ๊กถูกให้เห็น -->
+        </div>
+        <button onclick="toggleGuideModal()" class="game-btn w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-extrabold">
+          เข้าใจแล้ว ลุยต่อ!
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. ระบบเสียงสังเคราะห์ (Web Audio API)
+    // ==========================================
+    let audioCtx = null;
+    let isSoundOn = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleSound() {
+      isSoundOn = !isSoundOn;
+      document.getElementById('sound-icon').textContent = isSoundOn ? '🔊' : '🔇';
+      if (isSoundOn) {
+        initAudio();
+        playTone(523.25, 'sine', 0.1, 0.15);
+      }
+    }
+
+    function playTone(freq, type, duration, volume = 0.2, delay = 0) {
+      if (!isSoundOn) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+      
+      gain.gain.setValueAtTime(volume, audioCtx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + delay);
+      osc.stop(audioCtx.currentTime + delay + duration);
+    }
+
+    // เสียงเลือกถูก (วิ้งๆ สดใส)
+    function playCorrectSound(step) {
+      if (!isSoundOn) return;
+      initAudio();
+      const baseFreq = 440 + (step * 45);
+      playTone(baseFreq, 'triangle', 0.18, 0.22, 0);
+      playTone(baseFreq * 1.25, 'sine', 0.25, 0.22, 0.1);
+      // เสียงฟองปุดๆ เบาๆ
+      playTone(300, 'sine', 0.08, 0.15, 0.18);
+      playTone(420, 'sine', 0.08, 0.15, 0.24);
+    }
+
+    // เสียงระเบิดตลกๆ (Boom + Slide Whistle ลง)
+    function playExplosionSound() {
+      if (!isSoundOn) return;
+      initAudio();
+
+      // เสียงระเบิด (White Noise + Low Bass)
+      const bufferSize = audioCtx.sampleRate * 0.8;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.25));
+      }
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(600, audioCtx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.7);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start();
+
+      // เสียงการ์ตูนตลกๆ "วี้วววว~ แป้ก"
+      const osc = audioCtx.createOscillator();
+      const oscGain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(650, audioCtx.currentTime + 0.2);
+      osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.85);
+      oscGain.gain.setValueAtTime(0.18, audioCtx.currentTime + 0.2);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.85);
+
+      osc.connect(oscGain);
+      oscGain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + 0.2);
+      osc.stop(audioCtx.currentTime + 0.85);
+    }
+
+    // เสียงชนะ (Fanfare)
+    function playVictorySound() {
+      if (!isSoundOn) return;
+      initAudio();
+      const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+      const times = [0, 0.12, 0.24, 0.36, 0.55, 0.70];
+      notes.forEach((n, idx) => {
+        playTone(n, 'triangle', 0.35, 0.25, times[idx]);
+      });
+    }
+
+    // ==========================================
+    // 2. ข้อมูลขั้นตอนที่ถูกต้อง และ ตัวหลอกตลกๆ
+    // ==========================================
+    const STEPS_DATA = [
+      {
+        step: 1,
+        id: 'step_1',
+        name: 'ขวดทดสอบ',
+        sub: 'Test Bottle',
+        icon: '🧪',
+        color: 'border-sky-400 bg-sky-50',
+        successMsg: 'วางขวดทดสอบเรียบร้อย! พร้อมใส่ตัวอย่างดิน',
+        speech: 'เยี่ยม! ขวดทดสอบพร้อมแล้วครับ'
+      },
+      {
+        step: 2,
+        id: 'step_2',
+        name: 'ตักดิน 1 ช้อน',
+        sub: 'ใส่ขวดทดสอบ',
+        icon: '🥄🟫',
+        color: 'border-amber-600 bg-amber-50',
+        successMsg: 'ตักดินตัวอย่างใส่ขวดทดสอบ 1 ช้อนพอดีเป๊ะ!',
+        speech: 'ตักดิน 1 ช้อน ใส่ลงไปเลย!'
+      },
+      {
+        step: 3,
+        id: 'step_3',
+        name: 'น้ำยา N-1 (3 มล.)',
+        sub: 'Reagent N-1',
+        icon: '💧🔵',
+        color: 'border-blue-500 bg-blue-50',
+        successMsg: 'เติมน้ำยา N-1 ปริมาตร 3 มล. ลงในขวดทดสอบแล้ว!',
+        speech: 'เติม N-1 ลงไป 3 มล. สีสวยเลย'
+      },
+      {
+        step: 4,
+        id: 'step_4',
+        name: 'น้ำยา N-2 (1 มล.)',
+        sub: 'Reagent N-2',
+        icon: '💧🟡',
+        color: 'border-yellow-500 bg-yellow-50',
+        successMsg: 'หยดน้ำยา N-2 ปริมาตร 1 มล. เพิ่มลงไปเรียบร้อย!',
+        speech: 'ตามด้วย N-2 อีก 1 มล. ครับ!'
+      },
+      {
+        step: 5,
+        id: 'step_5',
+        name: 'ปิดฝา & แกว่ง 5 นาที',
+        sub: 'Cap & Shake',
+        icon: '🔴👋',
+        color: 'border-rose-500 bg-rose-50',
+        successMsg: 'ปิดฝาแน่นหนา แกว่งเบาๆ 5 นาที สารละลายเข้ากันดีมาก!',
+        speech: 'เขย่าเบาๆ 5 นาที ให้เข้ากัน~'
+      },
+      {
+        step: 6,
+        id: 'step_6',
+        name: 'น้ำยา N-3 (10 มล.)',
+        sub: 'Reagent N-3',
+        icon: '🧪🟢',
+        color: 'border-teal-500 bg-teal-50',
+        successMsg: 'เติมน้ำยา N-3 ปริมาตร 10 มล. เริ่มเปลี่ยนสีแล้ว!',
+        speech: 'ใส่น้ำยา N-3 อีก 10 มล.!'
+      },
+      {
+        step: 7,
+        id: 'step_7',
+        name: 'กระดาษกรอง & ขวดกรอง',
+        sub: 'Filter Paper & Flask',
+        icon: '⏳⚗️',
+        color: 'border-emerald-500 bg-emerald-50',
+        successMsg: 'กรองของเหลวทั้งหมดลงขวดกรองสำเร็จ! ได้สารละลายสีเขียวสดใส!',
+        speech: 'ไชโย! ไนโตรเจนสูงมากครับ!'
+      }
+    ];
+
+    const DECOY_ITEMS = [
+      {
+        id: 'decoy_fishsauce',
+        name: 'น้ำปลา 1 ช้อน',
+        sub: 'เครื่องปรุงรส',
+        icon: '🐟🍾',
+        color: 'border-orange-400 bg-orange-50',
+        funnyReason: 'ตูมมม! เติมน้ำปลาลงไปทำไมครับเนี่ย ห้องแลปเหม็นคาวไปสามบ้านแปดบ้าน!'
+      },
+      {
+        id: 'decoy_soda',
+        name: 'น้ำอัดลมซ่าส์',
+        sub: 'เครื่องดื่ม',
+        icon: '🥤🫧',
+        color: 'border-red-400 bg-red-50',
+        funnyReason: 'ตูมมม! แก๊สน้ำอัดลมทำปฏิกิริยาพุ่งทะลุเพดานห้องแลปกลายเป็นโกโก้ครั้นช์!'
+      },
+      {
+        id: 'decoy_chili',
+        name: 'พริกป่น 1 ช้อน',
+        sub: 'ของแซ่บ',
+        icon: '🌶️🔥',
+        color: 'border-rose-500 bg-rose-50',
+        funnyReason: 'ตูมมม! ใส่พริกป่นลงไป อ.เนตร จามสนั่นจนโต๊ะทดลองระเบิด!'
+      },
+      {
+        id: 'decoy_msg',
+        name: 'ผงชูรส 2 ช้อน',
+        sub: 'เพิ่มความนัว',
+        icon: '🧂✨',
+        color: 'border-purple-400 bg-purple-50',
+        funnyReason: 'ตูมมม! ดินไม่ต้องการความนัวครับ ใส่ผงชูรสเข้าไปแลประเบิดเลย!'
+      },
+      {
+        id: 'decoy_plara',
+        name: 'น้ำปลาร้าต้มสุก',
+        sub: 'สูตรอีสานนัว',
+        icon: '🏺🐟',
+        color: 'border-amber-700 bg-amber-100',
+        funnyReason: 'กลิ่นนัวเกินไป จนห้องแลปทนไม่ไหว ตูมมม!'
+      },
+      {
+        id: 'decoy_icedcoffee',
+        name: 'กาแฟเย็นหวานน้อย',
+        sub: 'คาเฟอีนเข้มๆ',
+        icon: '🧋🧊',
+        color: 'border-stone-600 bg-stone-100',
+        funnyReason: 'เทกาแฟเย็นลงขวด ดินตื่นตัวเกินพิกัด ระเบิดเลย!'
+      },
+      {
+        id: 'decoy_dishsoap',
+        name: 'น้ำยาล้างจาน',
+        sub: 'สูตรขจัดคราบ',
+        icon: '🫧🧴',
+        color: 'border-lime-500 bg-lime-50',
+        funnyReason: 'ฟองฟอดเต็มห้องแลป จนความดันพุ่งปรี๊ด ตูม!'
+      },
+      {
+        id: 'decoy_chilisauce',
+        name: 'ซอสพริกศรีราชา',
+        sub: 'เผ็ดเปรี้ยวหวาน',
+        icon: '🌶️🥫',
+        color: 'border-red-600 bg-red-50',
+        funnyReason: 'เผ็ดร้อนเกินไป ปฏิกิริยาเดือดปุดๆ ระเบิด!'
+      },
+      {
+        id: 'decoy_coconutmilk',
+        name: 'น้ำกะทิคั้นสด',
+        sub: 'หอมมันเข้มข้น',
+        icon: '🥥🥛',
+        color: 'border-teal-400 bg-teal-50',
+        funnyReason: 'กะทิแตกมันในขวดทดสอบ กลายเป็นแกงเขียวหวานระเบิด!'
+      },
+      {
+        id: 'decoy_oystersauce',
+        name: 'น้ำมันหอย',
+        sub: 'ซอสปรุงอาหาร',
+        icon: '🦪🍾',
+        color: 'border-amber-800 bg-amber-100',
+        funnyReason: 'ใส่ลงไปทำไม! นี่ห้องแลปดิน ไม่ใช่ร้านผัดผักบุ้งไฟแดง!'
+      },
+      {
+        id: 'decoy_condensedmilk',
+        name: 'นมข้นหวาน',
+        sub: 'หวานมันเข้มข้น',
+        icon: '🥫🥛',
+        color: 'border-yellow-400 bg-yellow-50',
+        funnyReason: 'หวานเจี๊ยบจนมดขึ้นขวดทดสอบ จุลินทรีย์ช็อกน้ำตาลระเบิด!'
+      },
+      {
+        id: 'decoy_limejuice',
+        name: 'น้ำมะนาวคั้นสด',
+        sub: 'เปรี้ยวจี๊ดจ๊าด',
+        icon: '🍋💧',
+        color: 'border-green-500 bg-green-50',
+        funnyReason: 'เปรี้ยวจี๊ดจนค่า pH พุ่งทะลุปรอท ขวดทดสอบทนไม่ไหว!'
+      }
+    ];
+
+    // ==========================================
+    // 3. สถานะของเกม & ตัวจับเวลา (Game State & Timer)
+    // ==========================================
+    let currentStep = 1; // 1 ถึง 7
+    let isGameActive = false;
+    let floatingEntities = [];
+    let animationFrameId = null;
+
+    // ตัวแปรจับเวลา
+    let timerIntervalId = null;
+    let gameStartTime = 0;
+    let elapsedSeconds = 0;
+    const BEST_TIME_KEY = 'ajarn_net_nitrogen_best_time';
+
+    function formatTimerHUD(sec) {
+      const mins = Math.floor(sec / 60);
+      const remSecs = sec % 60;
+      const minStr = String(mins).padStart(2, '0');
+      const secStr = remSecs.toFixed(1).padStart(4, '0');
+      return `${minStr}:${secStr}`;
+    }
+
+    function startTimer() {
+      stopTimer();
+      gameStartTime = performance.now();
+      elapsedSeconds = 0;
+      document.getElementById('timer-display').textContent = '00:00.0';
+
+      timerIntervalId = setInterval(() => {
+        if (!isGameActive) return;
+        elapsedSeconds = (performance.now() - gameStartTime) / 1000;
+        document.getElementById('timer-display').textContent = formatTimerHUD(elapsedSeconds);
+      }, 100);
+    }
+
+    function stopTimer() {
+      if (timerIntervalId) {
+        clearInterval(timerIntervalId);
+        timerIntervalId = null;
+      }
+    }
+
+    // ==========================================
+    // 4. ฟังก์ชันเริ่มเกมและรีเซ็ต
+    // ==========================================
+    function startGame() {
+      initAudio();
+      playTone(440, 'sine', 0.1, 0.2);
+
+      currentStep = 1;
+      isGameActive = true;
+
+      // ซ่อนหน้าจอ overlay ทั้งหมด
+      document.getElementById('screen-start').classList.add('hidden');
+      document.getElementById('screen-gameover').classList.add('hidden');
+      document.getElementById('screen-victory').classList.add('hidden');
+      document.getElementById('modal-guide').classList.add('hidden');
+
+      // แสดง HUD, ตัวจับเวลา และแบนเนอร์สถานะ
+      document.getElementById('hud-timer-box').classList.remove('hidden');
+      document.getElementById('hud-progress-box').classList.remove('hidden');
+      document.getElementById('status-banner').classList.remove('hidden');
+
+      // เริ่มจับเวลาใหม่
+      startTimer();
+
+      // รีเซ็ตหน้าตา อ.เนตร ให้กลับมาหล่อเนี๊ยบปกติ
+      resetAjarnAppearance();
+
+      // รีเซ็ตโต๊ะทดลอง
+      resetWorkbench();
+
+      // อัปเดต HUD และคู่มือ
+      updateHUD(false);
+
+      // สร้างไอเทมลอยและเริ่มลูปแอนิเมชัน
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      spawnFloatingItems();
+      animateFloatingItems();
+    }
+
+    // ==========================================
+    // 5. ฟังก์ชันจัดการภาพ อ.เนตร และ โต๊ะทดลอง
+    // ==========================================
+    function resetAjarnAppearance() {
+      document.getElementById('exploded-hair').classList.add('hidden');
+      document.getElementById('eyes-exploded').classList.add('hidden');
+      document.getElementById('mouth-exploded').classList.add('hidden');
+
+      document.getElementById('eyes-normal').classList.remove('hidden');
+      document.getElementById('mouth-normal').classList.remove('hidden');
+      document.getElementById('ajarn-speech').textContent = 'เลือกขวดทดสอบก่อนเลยครับ! 🧪';
+    }
+
+    function setAjarnExploded() {
+      document.getElementById('exploded-hair').classList.remove('hidden');
+      document.getElementById('eyes-exploded').classList.remove('hidden');
+      document.getElementById('mouth-exploded').classList.remove('hidden');
+
+      document.getElementById('eyes-normal').classList.add('hidden');
+      document.getElementById('mouth-normal').classList.add('hidden');
+      document.getElementById('ajarn-speech').textContent = 'แค่กๆ... ผิดสูตรครับ! 💨';
+    }
+
+    function resetWorkbench() {
+      document.getElementById('stage-empty').classList.remove('hidden');
+      const bottleGroup = document.getElementById('test-bottle-group');
+      bottleGroup.classList.add('hidden');
+      bottleGroup.classList.remove('bottle-shaking');
+
+      document.getElementById('layer-soil').classList.add('hidden');
+      document.getElementById('layer-n1').classList.add('hidden');
+      document.getElementById('layer-n2').classList.add('hidden');
+      document.getElementById('layer-n3').classList.add('hidden');
+      document.getElementById('bottle-cap').classList.add('hidden');
+      document.getElementById('bottle-bubbles').classList.add('hidden');
+      document.getElementById('filtering-flask-group').classList.add('hidden');
+
+      document.getElementById('workbench-label').textContent = 'โต๊ะทดลอง: ว่างเปล่า';
+    }
+
+    function updateWorkbenchVisual(step) {
+      const bottleGroup = document.getElementById('test-bottle-group');
+      const label = document.getElementById('workbench-label');
+
+      if (step === 1) {
+        document.getElementById('stage-empty').classList.add('hidden');
+        bottleGroup.classList.remove('hidden');
+        label.textContent = 'โต๊ะทดลอง: ขวดทดสอบพร้อมแล้ว';
+      } else if (step === 2) {
+        document.getElementById('layer-soil').classList.remove('hidden');
+        label.textContent = 'โต๊ะทดลอง: ใส่ดินตัวอย่าง 1 ช้อน';
+      } else if (step === 3) {
+        document.getElementById('layer-n1').classList.remove('hidden');
+        document.getElementById('bottle-bubbles').classList.remove('hidden');
+        label.textContent = 'โต๊ะทดลอง: เติมน้ำยา N-1 (3 มล.)';
+      } else if (step === 4) {
+        document.getElementById('layer-n2').classList.remove('hidden');
+        label.textContent = 'โต๊ะทดลอง: เติมน้ำยา N-2 (1 มล.)';
+      } else if (step === 5) {
+        document.getElementById('bottle-cap').classList.remove('hidden');
+        bottleGroup.classList.add('bottle-shaking');
+        label.textContent = 'โต๊ะทดลอง: กำลังแกว่งขวด 5 นาที...';
+        setTimeout(() => {
+          bottleGroup.classList.remove('bottle-shaking');
+        }, 1600);
+      } else if (step === 6) {
+        document.getElementById('bottle-cap').classList.add('hidden');
+        document.getElementById('layer-n3').classList.remove('hidden');
+        label.textContent = 'โต๊ะทดลอง: เติมน้ำยา N-3 (10 มล.)';
+      } else if (step === 7) {
+        bottleGroup.classList.add('hidden');
+        document.getElementById('filtering-flask-group').classList.remove('hidden');
+        label.textContent = 'โต๊ะทดลอง: กรองสำเร็จ! สารละลายสีเขียวเข้ม';
+      }
+    }
+
+    // ==========================================
+    // 6. ระบบสร้างและเคลื่อนที่ของไอเทมลอยไปมา
+    // ==========================================
+    function spawnFloatingItems() {
+      const layer = document.getElementById('floating-layer');
+      layer.innerHTML = '';
+      floatingEntities = [];
+
+      // เลือกไอเทมที่จะลอย: เอาขั้นตอนที่ยังไม่เสร็จทั้งหมด + ตัวหลอกสุ่มมา 8 ตัวจากทั้งหมด 12 ตัว (รวมสูงสุด 15 ชิ้นลอยปะปนเพิ่มความท้าทาย)
+      const remainingSteps = STEPS_DATA.filter(s => s.step >= currentStep);
+      const shuffledDecoys = [...DECOY_ITEMS].sort(() => Math.random() - 0.5).slice(0, 8);
+      const allItemsToSpawn = [...remainingSteps, ...shuffledDecoys].sort(() => Math.random() - 0.5);
+
+      const arenaRect = layer.getBoundingClientRect();
+      const width = arenaRect.width || 800;
+      const height = arenaRect.height || 600;
+
+      // พื้นที่ปลอดภัยให้ไอเทมลอย (โซนบนและกลาง ไม่ทับตัว อ.เนตร และโต๊ะด้านล่างมากเกินไป)
+      const cardW = width < 500 ? 104 : 124;
+      const minX = 12;
+      const maxX = Math.max(120, width - cardW - 12);
+      const minY = 72; // หลบแบนเนอร์ด้านบน
+      const maxY = Math.max(180, height * 0.54);
+
+      allItemsToSpawn.forEach((item, index) => {
+        const el = document.createElement('div');
+        el.className = `floating-item flex flex-col items-center justify-center px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-2xl border-2 shadow-lg backdrop-blur-sm select-none ${item.color}`;
+        el.style.width = `${cardW}px`;
+
+        el.innerHTML = `
+          <div class="text-xl sm:text-2xl mb-0.5 pointer-events-none">${item.icon}</div>
+          <div class="text-[11px] sm:text-xs font-extrabold text-slate-800 text-center leading-tight pointer-events-none">${item.name}</div>
+          <div class="text-[9px] sm:text-[10px] text-slate-500 font-medium text-center leading-tight pointer-events-none">${item.sub}</div>
+        `;
+
+        // ตำแหน่งเริ่มต้นกระจายไม่ซ้อนกันมาก
+        const startX = minX + Math.random() * (maxX - minX);
+        const startY = minY + Math.random() * (maxY - minY);
+
+        // ความเร็วลอยช้าๆ สบายตา กดง่าย
+        const speedBase = width < 500 ? 0.6 : 0.85;
+        const angle = Math.random() * Math.PI * 2;
+        const vx = Math.cos(angle) * (speedBase + Math.random() * 0.45);
+        const vy = Math.sin(angle) * (speedBase + Math.random() * 0.45);
+
+        el.style.left = `${startX}px`;
+        el.style.top = `${startY}px`;
+
+        // รองรับทั้งคลิกเมาส์และแตะหน้าจอ
+        el.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          handleItemClick(item, el);
+        });
+
+        layer.appendChild(el);
+
+        floatingEntities.push({
+          el,
+          item,
+          x: startX,
+          y: startY,
+          vx,
+          vy,
+          w: cardW,
+          h: 68
+        });
+      });
+    }
+
+    function animateFloatingItems() {
+      if (!isGameActive) return;
+
+      const layer = document.getElementById('floating-layer');
+      const width = layer.clientWidth || 800;
+      const height = layer.clientHeight || 600;
+
+      const minX = 10;
+      const maxX = width - 10;
+      const minY = 68;
+      const maxY = height * 0.58;
+
+      floatingEntities.forEach(ent => {
+        ent.x += ent.vx;
+        ent.y += ent.vy;
+
+        // เด้งกลับเมื่อชนขอบพื้นที่ลอย
+        if (ent.x <= minX) {
+          ent.x = minX;
+          ent.vx *= -1;
+        } else if (ent.x + ent.w >= maxX) {
+          ent.x = maxX - ent.w;
+          ent.vx *= -1;
+        }
+
+        if (ent.y <= minY) {
+          ent.y = minY;
+          ent.vy *= -1;
+        } else if (ent.y + ent.h >= maxY) {
+          ent.y = maxY - ent.h;
+          ent.vy *= -1;
+        }
+
+        ent.el.style.left = `${ent.x}px`;
+        ent.el.style.top = `${ent.y}px`;
+      });
+
+      animationFrameId = requestAnimationFrame(animateFloatingItems);
+    }
+
+    // ==========================================
+    // 7. ตรวจสอบเมื่อผู้เล่นคลิกเลือกไอเทม
+    // ==========================================
+    function handleItemClick(item, element) {
+      if (!isGameActive) return;
+
+      const expectedStepObj = STEPS_DATA[currentStep - 1];
+
+      // กรณีที่ 1: เลือกถูกต้องตามขั้นตอน!
+      if (item.step === currentStep) {
+        playCorrectSound(currentStep);
+
+        // เอฟเฟกต์ไอเทมลอยหายไปแบบวิ้งๆ
+        element.style.transition = 'all 0.3s ease';
+        element.style.transform = 'scale(1.4)';
+        element.style.opacity = '0';
+        setTimeout(() => {
+          if (element.parentNode) element.parentNode.removeChild(element);
+        }, 300);
+
+        // ลบออกจาก array การเคลื่อนที่
+        floatingEntities = floatingEntities.filter(e => e.item.id !== item.id);
+
+        // อัปเดตภาพโต๊ะทดลองและคำพูด อ.เนตร
+        updateWorkbenchVisual(currentStep);
+        document.getElementById('ajarn-speech').textContent = expectedStepObj.speech;
+
+        // อัปเดตแบนเนอร์ด้านบน
+        const banner = document.getElementById('status-banner');
+        banner.classList.remove('border-emerald-500');
+        banner.classList.add('border-amber-400', 'bg-amber-50');
+        document.getElementById('status-title').textContent = `✨ สำเร็จขั้นตอนที่ ${currentStep}/7!`;
+        document.getElementById('status-message').textContent = expectedStepObj.successMsg;
+
+        // เช็กว่าครบ 7 ขั้นตอนหรือยัง
+        if (currentStep === 7) {
+          isGameActive = false;
+          stopTimer();
+          const finalSec = (performance.now() - gameStartTime) / 1000;
+          document.getElementById('timer-display').textContent = formatTimerHUD(finalSec);
+
+          // จัดการสถิติเวลาที่เร็วที่สุด (Best Time)
+          const prevBest = parseFloat(localStorage.getItem(BEST_TIME_KEY));
+          let bestSec = finalSec;
+          const newRecordBadge = document.getElementById('new-record-badge');
+
+          if (isNaN(prevBest) || finalSec < prevBest) {
+            localStorage.setItem(BEST_TIME_KEY, finalSec.toFixed(1));
+            newRecordBadge.classList.remove('hidden');
+          } else {
+            bestSec = prevBest;
+            newRecordBadge.classList.add('hidden');
+          }
+
+          document.getElementById('final-time-display').textContent = `${finalSec.toFixed(1)} วินาที`;
+          document.getElementById('best-time-display').textContent = `${bestSec.toFixed(1)} วินาที`;
+
+          setTimeout(() => {
+            playVictorySound();
+            document.getElementById('screen-victory').classList.remove('hidden');
+          }, 1100);
+        } else {
+          currentStep++;
+          updateHUD(true);
+        }
+
+      } else {
+        // กรณีที่ 2: เลือกผิด (กดตัวหลอก หรือ กดข้ามขั้นตอน) -> ห้องแลประเบิด!
+        triggerExplosion(item, expectedStepObj);
+      }
+    }
+
+    function triggerExplosion(clickedItem, expectedStepObj) {
+      isGameActive = false;
+      stopTimer();
+      playExplosionSound();
+
+      // เขย่าหน้าจอ
+      const wrapper = document.getElementById('game-wrapper');
+      wrapper.classList.remove('shake-effect');
+      void wrapper.offsetWidth; // trigger reflow
+      wrapper.classList.add('shake-effect');
+
+      // เปลี่ยนหน้าตา อ.เนตร เป็นหน้าดำหัวฟู
+      setAjarnExploded();
+
+      // กำหนดข้อความสาเหตุการระเบิดแบบตลกๆ
+      let reasonText = '';
+      if (clickedItem.funnyReason) {
+        reasonText = clickedItem.funnyReason;
+      } else {
+        reasonText = `ตูมมม! คุณหยิบ "${clickedItem.name}" ผิดลำดับ! ห้องแลปกลายเป็นโกโก้ครั้นช์!`;
+      }
+
+      document.getElementById('explosion-reason').textContent = reasonText;
+      document.getElementById('explosion-hint').textContent = `💡 คำใบ้สำหรับขั้นตอนที่ ${currentStep}: ต้องเลือก "${expectedStepObj.name}" ก่อนนะครับ!`;
+
+      setTimeout(() => {
+        document.getElementById('screen-gameover').classList.remove('hidden');
+      }, 650);
+    }
+
+    // ==========================================
+    // 8. อัปเดต HUD และ คู่มือ
+    // ==========================================
+    function updateHUD(delayPrompt = false) {
+      document.getElementById('step-counter').textContent = `${currentStep} / 7`;
+      updateGuideList();
+
+      const updateBannerPrompt = () => {
+        if (!isGameActive) return;
+        const stepObj = STEPS_DATA[currentStep - 1];
+        const banner = document.getElementById('status-banner');
+        banner.classList.remove('border-amber-400', 'bg-amber-50');
+        banner.classList.add('border-emerald-500');
+        document.getElementById('status-title').textContent = `🎯 เป้าหมายขั้นตอนที่ ${currentStep} จาก 7:`;
+        document.getElementById('status-message').textContent = getStepInstructionText(currentStep);
+      };
+
+      if (delayPrompt) {
+        setTimeout(updateBannerPrompt, 1500);
+      } else {
+        updateBannerPrompt();
+      }
+    }
+
+    function getStepInstructionText(step) {
+      const instructions = {
+        1: '1. เตรียม "ขวดทดสอบ" มาวางบนโต๊ะ',
+        2: '2. "ตักดิน 1 ช้อน" ใส่ขวดทดสอบ',
+        3: '3. เติม "น้ำยา N-1 (3 มล.)"',
+        4: '4. เติม "น้ำยา N-2 (1 มล.)"',
+        5: '5. "ปิดฝา & แกว่ง 5 นาที"',
+        6: '6. เติม "น้ำยา N-3 (10 มล.)"',
+        7: '7. กรองด้วย "กระดาษกรอง & ขวดกรอง"'
+      };
+      return instructions[step] || '';
+    }
+
+    function updateGuideList() {
+      const list = document.getElementById('guide-list');
+      list.innerHTML = STEPS_DATA.map(s => {
+        const isDone = s.step < currentStep;
+        const isCurrent = s.step === currentStep && isGameActive;
+        let rowStyle = 'bg-slate-50 border-slate-200 text-slate-600';
+        let badge = `${s.step}.`;
+
+        if (isDone) {
+          rowStyle = 'bg-emerald-50 border-emerald-300 text-emerald-800 line-through opacity-75';
+          badge = '✅';
+        } else if (isCurrent) {
+          rowStyle = 'bg-amber-50 border-amber-400 text-slate-900 font-bold shadow-sm';
+          badge = '👉';
+        }
+
+        return `
+          <div class="flex items-center gap-2.5 p-2 rounded-xl border ${rowStyle}">
+            <span class="text-base">${badge}</span>
+            <span class="text-lg">${s.icon}</span>
+            <span>${getStepInstructionText(s.step).replace(/^\d+\.\s*/, '')}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleGuideModal() {
+      initAudio();
+      playTone(600, 'sine', 0.08, 0.15);
+      updateGuideList();
+      const modal = document.getElementById('modal-guide');
+      modal.classList.toggle('hidden');
+    }
+
+    // ปรับตำแหน่งไอเทมอัตโนมัติเมื่อหมุนจอหรือย่อขยายหน้าต่าง
+    window.addEventListener('resize', () => {
+      if (!isGameActive) return;
+      const layer = document.getElementById('floating-layer');
+      const maxX = layer.clientWidth - 135;
+      const maxY = layer.clientHeight * 0.56;
+      floatingEntities.forEach(ent => {
+        if (ent.x > maxX) ent.x = Math.max(10, maxX);
+        if (ent.y > maxY) ent.y = Math.max(70, maxY);
+      });
+    });
+
+    // อัปเดตรายการคู่มือตั้งแต่โหลดหน้าเว็บ
+    updateGuideList();
+  </script>
+</body>
+</html>
